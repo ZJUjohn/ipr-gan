@@ -63,6 +63,14 @@ def calculate_frechet_distance(mu1, sigma1, mu2, sigma2, eps=1e-6):
     Returns:
     --   : The Frechet Distance.
     """
+    # 这个函数用于计算两个高斯分布之间的Frechet距离
+    # mu1, sigma1: 生成样本的均值和协方差矩阵
+    # mu2, sigma2: 真实样本的均值和协方差矩阵
+    # eps: 防止数值不稳定的微小值
+    # 高斯分布是指具有均值和协方差矩阵的多元正态分布
+    # Frechet距离是用于比较两个高斯分布的距离度量，计算公式为
+    # d^2 = ||mu1 - mu2||^2 + Tr(sigma1 + sigma2 - 2*sqrt(sigma1*sigma2))
+    # 其中||mu1 - mu2||^2是均值之间的欧几里得距离的平方
 
     mu1 = np.atleast_1d(mu1)
     mu2 = np.atleast_1d(mu2)

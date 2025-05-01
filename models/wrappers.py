@@ -4,20 +4,20 @@ from torch.nn import DataParallel
 import tools
 import torch
 
-class BlackBoxWrapper(Wrapper):
+class BlackBoxWrapper(Wrapper): # 这个类是黑盒保护的包装器
     def __init__(self, model, config):
         super(BlackBoxWrapper, self).__init__(model, config)
         self.configure()
 
-    def configure(self):
+    def configure(self): # 配置黑盒保护
         normalized = self.config.normalized
         
-        ids = [k.index for k in self.device]
+        ids = [k.index for k in self.device] # 获取设备ID
 
-        fn_inp = getattr(tools, self.config.fn_inp.type)(
-            self.config.fn_inp, normalized=normalized
+        fn_inp = getattr(tools, self.config.fn_inp.type)( 
+            self.config.fn_inp, normalized=normalized # 输入函数
         ).to(self.device[0])
-        self.fn_inp = DataParallel(fn_inp, device_ids=ids)
+        self.fn_inp = DataParallel(fn_inp, device_ids=ids) # 并行计算
 
         fn_out = getattr(tools, self.config.fn_out.type)(
             self.config.fn_out, normalized=normalized

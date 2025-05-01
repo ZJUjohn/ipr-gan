@@ -15,7 +15,7 @@ import torch
 class ImageSuperResolution(Experiment):
     def __init__(self, config):
         print('IMAGE SUPER-RESOLUTION EXPERIMENT\n')
-        super(ImageSuperResolution, self).__init__(config)
+        super(ImageSuperResolution, self).__init__(config) # 初始化父类，super()表示调用父类的构造函数
         self.configure_dataset()
         self.configure_model()
         self.configure_protection()
@@ -59,11 +59,11 @@ class ImageSuperResolution(Experiment):
             if bbox:
                 print('*** BLACK-BOX ***')
                 
-                bbox['normalized'] = False
-                bbox['input_var'] = 'low_res'
-                bbox['output_var'] = 'super_res'
-                bbox['target'] = 'G'
-                self.model = models.BlackBoxWrapper(self.model, bbox)
+                bbox['normalized'] = False # 是否归一化
+                bbox['input_var'] = 'low_res' # 输入变量
+                bbox['output_var'] = 'super_res' # 输出变量
+                bbox['target'] = 'G' # 目标变量
+                self.model = models.BlackBoxWrapper(self.model, bbox) # 包装模型
                 
                 print(f'Input f(x): {bbox.fn_inp}')
                 print(f'Output f(x): {bbox.fn_out}')
@@ -83,21 +83,21 @@ class ImageSuperResolution(Experiment):
 
     def train(self):
 
-        pretrain_iter = self.config.hparam.pretrain_iter
-        halfway = pretrain_iter + (self.config.hparam.iteration // 2)
-        if self._step == halfway and pretrain_iter > 0:
-            self.model.optG.param_groups[0]['lr'] *= 0.1
-            self.model.optD.param_groups[0]['lr'] *= 0.1
+        pretrain_iter = self.config.hparam.pretrain_iter # 预训练迭代次数
+        halfway = pretrain_iter + (self.config.hparam.iteration // 2) # 半程迭代次数
+        if self._step == halfway and pretrain_iter > 0: # 如果到达半程迭代次数
+            self.model.optG.param_groups[0]['lr'] *= 0.1 # 学习率衰减，optG是生成器的优化器
+            self.model.optD.param_groups[0]['lr'] *= 0.1 # 学习率衰减，optD是判别器的优化器
 
-        if self._step <= pretrain_iter:
-            lr, hr = next(self.data_loader)
+        if self._step <= pretrain_iter: # 如果处于预训练阶段
+            lr, hr = next(self.data_loader) # 获取低分辨率和高分辨率图像
 
-            data = {'low_res': lr, 'high_res': hr, 'pretrain': True}
-            data['inhibit_bbox'] = True
-            self.model.update_g(data)
+            data = {'low_res': lr, 'high_res': hr, 'pretrain': True} # 数据字典
+            data['inhibit_bbox'] = True # 禁用bbox
+            self.model.update_g(data) # 更新生成器
         else:
-            d_iter = self.config.hparam.get('d_iter', 1)
-            g_iter = self.config.hparam.get('g_iter', 1)
+            d_iter = self.config.hparam.get('d_iter', 1) # 判别器迭代次数
+            g_iter = self.config.hparam.get('g_iter', 1) # 生成器迭代次数
             
             for _ in range(g_iter):
                 lr, hr = next(self.data_loader)

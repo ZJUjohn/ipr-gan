@@ -15,6 +15,11 @@ import tools
 import torch
 
 class ImageGeneration(Experiment):
+    '''
+    这是一个图像生成实验的类，继承自Experiment类。
+    这个类主要用于配置数据集、模型和保护机制，并实现训练和评估的方法。
+    这个类还提供了一些方法用于保存检查点和评估模型的性能。
+    '''
     def __init__(self, config):
         print('IMAGE GENERATION EXPERIMENT\n')
         super(ImageGeneration, self).__init__(config)
@@ -22,7 +27,7 @@ class ImageGeneration(Experiment):
         self.configure_model()
         self.configure_protection()
 
-    def configure_dataset(self):
+    def configure_dataset(self): 
         print('*** DATASET ***')
         name = self.config.dataset.name
         self.data_loader = getattr(datasets, name)(
