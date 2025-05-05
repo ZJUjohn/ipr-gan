@@ -147,3 +147,13 @@ data/*
 # sample
 sample/
 
+# log
+
+# 忽略整个 log 目录及其所有内容
+log/
+
+# 例外规则：不要忽略 log/ 目录下的各子目录中的 metrics.json 文件
+!log/*/metrics.json
+
+ipr-gan.txt
+ipr-gan.txt.pub
