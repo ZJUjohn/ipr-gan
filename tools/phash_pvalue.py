@@ -11,7 +11,7 @@ def compute_hash(img_tensor):
 
         x = np.uint8(TF.to_pil_image(img_tensor[i, ...]))
         h, q = pdqhash.compute(x)
-        h = np.bool8(h)
+        h = np.bool(h)
         hash_batch.append(h)
 
     return np.stack(hash_batch)

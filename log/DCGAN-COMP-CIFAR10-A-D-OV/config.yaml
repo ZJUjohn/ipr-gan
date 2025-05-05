@@ -1,0 +1,47 @@
+dataset:
+  name: cifar10
+  path: ./data/cifar10
+  size: 32
+evaluation:
+  data:
+  - bsz: 50
+    name: cifar10
+    path: ./data/cifar10
+    size: 32
+  p_thres: 0.01
+experiment: ImageGeneration
+hparam:
+  bsz: 64
+  iteration: 100000
+log:
+  freq: 1000
+  path: /data/10T/yhy/ipr-gan/log/DCGAN-COMP-CIFAR10-A-D-OV
+model:
+  D: SNDiscriminator32
+  G: ConvGenerator32
+  opt: Adam
+  opt_param:
+    betas:
+    - 0.5
+    - 0.999
+    lr: 0.0002
+  type: DCGAN
+protection:
+  bbox:
+    fn_inp:
+      type: TransformDist
+    fn_out:
+      opaque: true
+      size: 16
+      type: PasteWatermark
+      watermark: ./data/watermarks/A.png
+    lambda: 1.0
+    loss_fn: ssim
+  wbox:
+    gamma_0: 0.1
+    string: EXAMPLE A
+resource:
+  gpu: true
+  ngpu: 1
+  worker: 4
+seed: 1234
